@@ -1,0 +1,226 @@
+<div class="container mt-3">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Projeto Agenda de Tarefas</h5>
+      <p class="card-text">
+        Pesquise suas tarefas pelo período de datas desejado:
+      </p>
+
+      <form [formGroup]="formConsulta" (submit)="pesquisarTarefas()">
+        <div class="row">
+          <div class="col-md-3">
+            <label>Data e hora de início:</label>
+            <input type="datetime-local" formControlName="dataInicio" class="form-control" />
+
+            <div class="text-danger" *ngIf="
+                  fConsulta['dataInicio'].touched &&
+                  fConsulta['dataInicio'].invalid
+                ">
+              Por favor, informe a data de início.
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label>Data de hora de término:</label>
+            <input type="datetime-local" formControlName="dataFim" class="form-control" />
+
+            <div class="text-danger" *ngIf="
+                  fConsulta['dataFim'].touched && fConsulta['dataFim'].invalid
+                ">
+              Por favor, informe a data de término.
+            </div>
+          </div>
+          <div class="col-md-6">
+            <input type="submit" class="btn btn-primary mt-4" [disabled]="formConsulta.invalid" value="Pesquisar Tarefas" />
+
+            <input type="button" class="btn btn-secondary mt-4 ms-2" data-bs-toggle="modal" data-bs-target="#cadastroTarefa" value="Cadastrar Tarefa" />
+          </div>
+        </div>
+      </form>
+
+      <div class="table-responsive mt-3 mb-3">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Nome da tarefa</th>
+              <th>Data e hora</th>
+              <th>Prioridade</th>
+              <th>Descrição</th>
+              <th width="140">Operações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of tarefas">
+              <td>{{ item.nome | uppercase }}</td>
+              <td>{{ item.dataHora | date : "dd/MM/yyyy HH:mm" }}</td>
+              <td>
+                <span *ngIf="item.prioridade == 1" class="badge text-bg-danger">
+                  ALTA
+                </span>
+                <span *ngIf="item.prioridade == 2" class="badge text-bg-warning">
+                  MÉDIA
+                </span>
+                <span *ngIf="item.prioridade == 3" class="badge text-bg-success">
+                  BAIXA
+                </span>
+              </td>
+              <td>{{ item.descricao }}</td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#edicaoTarefa" (click)="obterTarefa(item)">
+                  Editar
+                </button>
+
+                <button class="btn btn-sm btn-outline-danger" (click)="excluirTarefa(item.id)">
+                  Excluir
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5">Quantidade de tarefas: {{ tarefas.length }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para cadastro de tarefa -->
+<div class="modal fade" id="cadastroTarefa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Cadastro de tarefa
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="mensagemCadastro" class="alert alert-primary mb-3">
+          <strong>{{ mensagemCadastro }}</strong>
+        </div>
+
+        <form [formGroup]="formCadastro" (ngSubmit)="cadastrarTarefa()">
+          <div class="mb-2">
+            <label>Nome da tarefa:</label>
+            <input type="text" class="form-control" placeholder="Digite aqui." formControlName="nome" />
+
+            <div class="text-danger" *ngIf="fCadastro['nome'].touched && fCadastro['nome'].invalid">
+              Por favor, informe o nome da tarefa de 8 a 100 caracteres.
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label>Descrição da tarefa:</label>
+            <textarea class="form-control" placeholder="Digite aqui" formControlName="descricao"></textarea>
+
+            <div class="text-danger" *ngIf="
+                  fCadastro['descricao'].touched && fCadastro['descricao'].invalid
+                ">
+              Por favor, informe a descrição da tarefa de 8 a 100 caracteres.
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label>Data e hora da tarefa:</label>
+            <input type="datetime-local" class="form-control" formControlName="dataHora" />
+
+            <div class="text-danger" *ngIf="
+                  fCadastro['dataHora'].touched && fCadastro['dataHora'].invalid
+                ">
+              Por favor, informe a data e hora da tarefa.
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label>Prioridade da tarefa:</label>
+            <select class="form-select" formControlName="prioridade">
+              <option value="">Escolha uma opção</option>
+              <option value="1">PRIORIDADE ALTA</option>
+              <option value="2">PRIORIDADE MÉDIA</option>
+              <option value="3">PRIORIDADE BAIXA</option>
+            </select>
+
+            <div class="text-danger" *ngIf="
+                  fCadastro['prioridade'].touched &&
+                  fCadastro['prioridade'].invalid
+                ">
+              Por favor, selecione a prioridade da tarefa.
+            </div>
+          </div>
+
+          <div class="mb-2 d-grid">
+            <input type="submit" class="btn btn-success" value="Realizar Cadastro" [disabled]="formCadastro.invalid" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para edição de tarefa -->
+<div class="modal fade" id="edicaoTarefa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          Edição de tarefa
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="formEdicao" (ngSubmit)="editarTarefa()">
+          <div class="mb-2">
+            <label>Nome da tarefa:</label>
+            <input type="text" class="form-control" placeholder="Digite aqui." formControlName="nome" />
+
+            <div class="text-danger" *ngIf="fEdicao['nome'].touched && fEdicao['nome'].invalid">
+              Por favor, informe o nome da tarefa de 8 a 100 caracteres.
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label>Descrição da tarefa:</label>
+            <textarea class="form-control" placeholder="Digite aqui" formControlName="descricao"></textarea>
+
+            <div class="text-danger" *ngIf="
+                  fEdicao['descricao'].touched && fEdicao['descricao'].invalid
+                ">
+              Por favor, informe a descrição da tarefa de 8 a 100 caracteres.
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label>Data e hora da tarefa:</label>
+            <input type="datetime-local" class="form-control" formControlName="dataHora" />
+
+            <div class="text-danger" *ngIf="fEdicao['dataHora'].touched && fEdicao['dataHora'].invalid">
+              Por favor, informe a data e hora da tarefa.
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label>Prioridade da tarefa:</label>
+            <select class="form-select" formControlName="prioridade">
+              <option value="">Escolha uma opção</option>
+              <option value="1">PRIORIDADE ALTA</option>
+              <option value="2">PRIORIDADE MÉDIA</option>
+              <option value="3">PRIORIDADE BAIXA</option>
+            </select>
+
+            <div class="text-danger" *ngIf="
+                  fEdicao['prioridade'].touched && fEdicao['prioridade'].invalid
+                ">
+              Por favor, selecione a prioridade da tarefa.
+            </div>
+          </div>
+
+          <div class="mb-2 d-grid">
+            <input type="submit" class="btn btn-primary" value="Salvar Alterações" data-bs-dismiss="modal" [disabled]="formEdicao.invalid" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

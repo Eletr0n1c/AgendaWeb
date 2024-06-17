@@ -1,0 +1,46 @@
+<div class="mt-5">
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="text-center">
+            <img src="https://www.cotiinformatica.com.br/imagens/logo-coti-informatica.svg" />
+            <h4 class="mt-3">Autenticação de usuários</h4>
+            <p>Entre com as suas credenciais de acesso.</p>
+          </div>
+
+
+          <div *ngIf="mensagemErro" class="alert alert-danger">
+            <strong>{{mensagemErro}}</strong>
+          </div>
+
+
+          <form [formGroup]="formLogin" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label>Email de acesso:</label>
+              <input type="text" class="form-control" formControlName="email" />
+              <span class="text-danger" *ngIf="f['email'].touched && f['email'].invalid">
+                Por favor, informe um endereço de email válido
+              </span>
+            </div>
+
+
+            <div class="mb-3">
+              <label>Senha de acesso:</label>
+              <input type="password" class="form-control" formControlName="senha" />
+              <span class="text-danger" *ngIf="f['senha'].touched && f['senha'].invalid">
+                Por favor, informe a senha com letras minúsculas, maiúsculas,
+                números, símbolos e pelo menos 8 caracteres.
+              </span>
+            </div>
+
+
+            <div class="mb-3 d-grid">
+              <input type="submit" class="btn btn-primary" value="Acessar Sistema" [disabled]="formLogin.invalid" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="mt-3">
+  <div class="row">
+    <div class="col-md-4 offset-md-4">
+      <div class="card">
+        <div class="card-body">
+          <div class="text-center">
+            <h4>Criação de usuários</h4>
+            <p>Entre com os seu dados.</p>
+          </div>
+
+          <div *ngIf="mensagemSucesso" class="alert alert-success">
+            <strong>{{mensagemSucesso}}</strong>
+          </div>
+
+          <div *ngIf="mensagemErro" class="alert alert-danger">
+            <strong>{{mensagemErro}}</strong>
+          </div>
+
+          <form [formGroup]="form" (submit)="onSubmit()">
+
+            <div class="mb-3">
+              <label>Nome do usuário:</label>
+              <input type="text" class="form-control" formControlName="nome" />
+              <div class="text-danger" *ngIf="f['nome'].touched && f['nome'].invalid">
+                Por favor, informe o nome com pelo menos 8 caracteres
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label>Email de acesso:</label>
+              <input type="text" class="form-control" formControlName="email" />
+              <div class="text-danger" *ngIf="f['email'].touched && f['email'].invalid">
+                Por favor, informe um endereço de email válido.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label>Senha de acesso:</label>
+              <input type="password" class="form-control" formControlName="senha" />
+              <div class="text-danger" *ngIf="f['senha'].touched && f['senha'].invalid">
+                Por favor, informe a senha com letras maiúscula(s), minúscula(s), número(s), símbolo(s) e com pelo menos 8 caracteres.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label>Confirmação da senha:</label>
+              <input type="password" class="form-control" formControlName="senhaConfirmacao" />
+              <div class="text-danger" *ngIf="f['senhaConfirmacao'].touched && f['senhaConfirmacao'].invalid">
+                Por favor, confirme a sua senha.
+              </div>
+            </div>
+
+            <div class="mb-3 d-grid">
+              <input [disabled]="form.invalid" type="submit" class="btn btn-success" value="Realizar Cadastro" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
